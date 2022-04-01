@@ -9,18 +9,13 @@ def main() -> int:
     )
 
     tree = Tree(root_node)
+    node = tree.serialize()
 
-    # for nodes in tree.serialize():
-    #    print(nodes.value)
+    while node != None:
+        print(node.value)
+        node = node.next()
 
-    # print(tree.serialize())
-    # print(tree.serialize())
-
-    # print(tree.deserialize())
-    # print(tree.deserialize())
-    # print(tree.deserialize())
-
-    # assert tree.deserialize(tree.serialize(node)).left.left.val == "left.left"
+    assert tree.deserialize().left.left.value == "left.left"
 
     return 0
 

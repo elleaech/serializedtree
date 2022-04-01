@@ -27,3 +27,20 @@ class TreeNode:
     @property
     def left(self):
         return self._left
+
+
+class ListNode:
+    def __init__(self, val: str, next=None):
+        self._val = val
+        self._next = next
+
+    def append(self, value: str):
+        self._next = ListNode(value)
+        return self._next
+
+    def next(self):
+        return self._next
+
+    @property
+    def value(self) -> str:
+        return self._val

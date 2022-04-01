@@ -3,55 +3,74 @@ from node import *
 
 class Tree:
     def __init__(self, root: TreeNode):
-        self._tree = root
-        self._string = None
+        self._tree: TreeNode = root
+        self._string: ListNode = None
+        self._last_string_node_level = 0
 
-    def serialize(self) -> list:
-        string = list()
-
+    def serialize(self) -> ListNode:
         if self._tree != None:
-            string.append(self._tree)
-            self._serialize_node(self._tree, string)
-            self._shift_structure(None, string)
-            return string
+            self._string = ListNode(self._tree.value)
+            root_node = self._string
+
+            self._serialize_node(self._tree)
+
+            self._shift_structure(None, root_node)
+            return root_node
         else:
             return self._string
 
-    def _shift_structure(self, node: TreeNode, string: list):
+    def _shift_structure(self, node: TreeNode, string: ListNode):
         self._string = string
         self._tree = node
 
-    def _serialize_node(self, node: TreeNode, string: list) -> None:
+    def _serialize_node(self, node: TreeNode) -> None:
         if node.has_left_child():
-            string.append(node.left)
-            self._serialize_node(node.left, string)
+            self._string = self._string.append(node.left.value)
+            self._serialize_node(node.left)
 
         if node.has_right_child():
-            string.append(node.right)
-            self._serialize_node(node.right, string)
+            self._string = self._string.append(node.right.value)
+            self._serialize_node(node.right)
 
         return None
 
     def deserialize(self) -> TreeNode:
-        tree = TreeNode("root", None, None)
-
         if self._string != None:
-            self._deserialize_node(tree, self._string)
+            tree = TreeNode(self._string.value)
+
+            self._deserialize_string(tree)
             self._shift_structure(tree, None)
+
+            self._last_string_node_level = 1
             return tree
         else:
-            return self._string
+            return self._tree
 
-    def _deserialize_node(self, node: TreeNode, stringNode: list) -> None:
-        if stringNode.next() != None:
-            position = self._get_node_position(stringNode.next().value)
-            if "left" == position:
-                node.add_left_child(stringNode)
-                self._deserialize_node(node.left, stringNode)
-            if "right" == position:
-                node.add_right_child(stringNode)
-                self._deserialize_node(node.right, stringNode)
-            if "leaf" == position:
-                return None
+    def _deserialize_string(self, node: TreeNode) -> None:
+        self._string = self._string.next()
+        if self._string == None:
+            return None
 
-        self._deserialize_node(node, stringNode)
+        position = self._get_node_position(self._string.value)
+        if "left" == position:
+            node.add_left_child(TreeNode(self._string.value))
+            self._deserialize_string(node.left)
+
+        if "full" == position:
+            return None
+
+        position = self._get_node_position(self._string.value)
+        if "right" == position:
+            node.add_right_child(TreeNode(self._string.value))
+            self._deserialize_string(node.right)
+
+    def _get_node_position(self, list_node: ListNode) -> str:
+        value = list_node.split(".")
+        value_len = len(value)
+
+        if value_len > self._last_string_node_level:
+            self._last_string_node_level = value_len
+            return value[-1]
+        else:
+            self._last_string_node_level -= 1
+            return "full"
