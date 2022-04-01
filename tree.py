@@ -5,7 +5,8 @@ class Tree:
     def __init__(self, root: TreeNode):
         self._tree: TreeNode = root
         self._string: ListNode = None
-        self._last_string_node_level = 0
+        self._node_level = 0
+        self._last_node_level = 0
 
     def serialize(self) -> ListNode:
         if self._tree != None:
@@ -41,7 +42,7 @@ class Tree:
             self._deserialize_string(tree)
             self._shift_structure(tree, None)
 
-            self._last_string_node_level = 1
+            self._last_node_level = 1
             return tree
         else:
             return self._tree
@@ -54,23 +55,38 @@ class Tree:
         position = self._get_node_position(self._string.value)
         if "left" == position:
             node.add_left_child(TreeNode(self._string.value))
+            self._last_node_level = self._node_level
             self._deserialize_string(node.left)
+        elif "right" == position:
+            node.add_right_child(TreeNode(self._string.value))
+            self._last_node_level = self._node_level
+            self._deserialize_string(node.right)
+        elif position == "full":
+            self._last_node_level -= 1
+            return None
 
-        if "full" == position:
+        if self._string == None:
             return None
 
         position = self._get_node_position(self._string.value)
         if "right" == position:
             node.add_right_child(TreeNode(self._string.value))
+            self._last_node_level = self._node_level
             self._deserialize_string(node.right)
+        elif "left" == position:
+            node.add_left_child(TreeNode(self._string.value))
+            self._last_node_level = self._node_level
+            self._deserialize_string(node.left)
+        elif position == "full":
+            self._last_node_level -= 1
+            return None
 
     def _get_node_position(self, list_node: ListNode) -> str:
         value = list_node.split(".")
         value_len = len(value)
+        self._node_level = value_len
 
-        if value_len > self._last_string_node_level:
-            self._last_string_node_level = value_len
+        if self._node_level > self._last_node_level:
             return value[-1]
         else:
-            self._last_string_node_level -= 1
             return "full"
