@@ -1,5 +1,5 @@
 from node import *
-from tree import Tree
+from tree import *
 from sys import exit
 
 
@@ -9,92 +9,10 @@ def main() -> int:
             "root", TreeNode("left", left=TreeNode("left.left")), TreeNode("right")
         )
     )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
+    serial_tree = tree.serialize()
 
-    tree = Tree(
-        TreeNode(
-            "root", TreeNode("left", right=TreeNode("left.right")), TreeNode("right")
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", right=TreeNode("left.right")),
-            TreeNode("right", left=TreeNode("right.left")),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", left=TreeNode("left.left")),
-            TreeNode("right", right=TreeNode("right.right")),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", right=TreeNode("left.right")),
-            TreeNode("right", right=TreeNode("right.right")),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(TreeNode("root", TreeNode("left"), TreeNode("right")))
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", left=TreeNode("left.left"), right=TreeNode("left.right")),
-            TreeNode("right", right=TreeNode("right.right")),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", left=TreeNode("left.left"), right=TreeNode("left.right")),
-            TreeNode("right", left=TreeNode("right.left")),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", left=TreeNode("left.left"), right=TreeNode("left.right")),
-            TreeNode("right"),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
-
-    tree = Tree(
-        TreeNode(
-            "root",
-            TreeNode("left", left=TreeNode("left.left"), right=TreeNode("left.right")),
-            TreeNode(
-                "right", left=TreeNode("right.left"), right=TreeNode("right.right")
-            ),
-        )
-    )
-    node = tree.serialize()
-    new_tree = tree.deserialize()
+    serial = Serial(serial_tree)
+    assert serial.deserialize().left.left.value == "left.left"
 
     return 0
 
