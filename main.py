@@ -1,18 +1,12 @@
-from node import *
-from tree import *
+from nodes import *
+from interfaces import *
 from sys import exit
 
-
 def main() -> int:
-    tree = Tree(
-        TreeNode(
-            "root", TreeNode("left", left=TreeNode("left.left")), TreeNode("right")
-        )
-    )
-    serial_tree = tree.serialize()
+    original_serial = Serial(CreateSerial("root", "left", "left.left", "right").create())
 
-    serial = Serial(serial_tree)
-    assert serial.deserialize().left.left.value == "left.left"
+    tree = Tree(original_serial.deserialize())
+    assert tree.serialize().next.next.value == "left.left"
 
     return 0
 
